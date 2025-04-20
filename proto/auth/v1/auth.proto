@@ -1,0 +1,71 @@
+syntax = "proto3";
+
+package auth_service.v1;
+option go_package = "github.com/theascendedeber/protosForViewMingle/gen/go/auth_service/v1;authv1";
+
+service AuthService {
+  rpc Register(RegisterRequest) returns (AuthResponse);
+  rpc Login(LoginRequest) returns (AuthResponse);
+  rpc Refresh(RefreshRequest) returns (AuthResponse);
+  rpc AccessRestriction(AccessRestrictionRequest) returns (ConfirmationResponse);
+  rpc TokenForService(TokenForServiceRequest) returns (TokenForServiceResponse);
+  rpc EditRoleUser(EditRoleUserRequest) returns (ConfirmationResponse);
+}
+
+message RegisterRequest {
+  string username = 1;
+  string password = 2;
+}
+
+message LoginRequest {
+  string username = 1;
+  string password = 2;
+}
+
+message RefreshRequest {
+  string access_token = 1;
+  string refresh_token = 2;
+}
+
+message AuthResponse {
+  string access_token = 1;
+  string refresh_token = 2;
+}
+
+enum NamesServices {
+  VIDEO_SYNC_SERVICE = 0;
+  CHAT_SERVICE = 1;
+  MEDIA_SERVICE = 2;
+}
+
+message TokenForServiceRequest {
+  NamesServices aud = 1;
+  string room_id = 2;
+  string user_id = 3;
+  int64 exp = 4;
+}
+
+message TokenForServiceResponse {
+  string access_token = 1;
+}
+
+enum UserRoles {
+  DEFAULT_USER = 0;
+  ADMINISTRATOR = 1;
+  MODERATOR = 2;
+}
+
+message EditRoleUserRequest {
+  string access_token = 1;
+  string user_id = 2;
+  UserRoles new_role = 3;
+}
+
+message AccessRestrictionRequest {
+  string access_token = 1;
+  string user_id = 2;
+}
+
+message ConfirmationResponse {
+  bool ok = 1;
+}
